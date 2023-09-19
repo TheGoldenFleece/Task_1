@@ -1,9 +1,13 @@
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Task_1.Models;
 using Task_1.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
 builder.Services.AddTransient<ExplorerDBFolderService>();
 
 var app = builder.Build();

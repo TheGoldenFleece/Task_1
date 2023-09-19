@@ -5,6 +5,5 @@ namespace Task_1.Model {
         public int FolderID { get; set; }
         public string Name { get; set; }
         public int? ParentID { get; set; }
-        
     }
 }

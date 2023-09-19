@@ -13,8 +13,13 @@ namespace Task_1.Pages {
             ExplorerDBFolderService = explorerDBFolderService;
         }
 
-        public void OnGet(int folderId = 1) {
-            Explorer = new Explorer(folderId, ExplorerDBFolderService.GetAllFolders());
+        public void OnGet(int? folderId = null) {
+            if (folderId == null) {
+                ExplorerDBFolderService.AddDefaultExplorerDB();
+                folderId = 1;
+            }
+
+            Explorer = new Explorer(folderId.Value, ExplorerDBFolderService.GetAllFolders());
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
-using Task_1.Model;
+﻿using Task_1.Model;
+using Task_1.Models;
 
 namespace Task_1.Services {
     public class ExplorerDBFolderService {
@@ -9,32 +9,55 @@ namespace Task_1.Services {
             WebHostEnvironment = webHostEnvironment;
         }
 
-        private string ExplorerDBName {
-            get { return Path.Combine(WebHostEnvironment.WebRootPath, "data", "explorer.mdb"); }
+        public List<Folder> GetAllFolders() {
+            using (var context = new ExplorerContext()) {
+                return context.Folders.ToList();
+            }
         }
 
-        public List<Folder> GetAllFolders() {
-            string connectionString = "Data Source=SPEEDY\\SQLEXPRESS;Initial Catalog=ExplorerDB;Integrated Security=True;TrustServerCertificate=True";
-            List<Folder> folders = new List<Folder>();
+        public void AddDefaultExplorerDB() {
+            using (var context = new ExplorerContext()) {
 
-            using (SqlConnection con = new SqlConnection(connectionString)) {
-                con.Open();
+                if (context.Folders.Any()) return;
 
-                string sqlQuery = "SELECT * FROM Explorer";
-                using (SqlCommand cmd = new SqlCommand(sqlQuery, con))
-                using (SqlDataReader reader = cmd.ExecuteReader()) {
-                    while (reader.Read()) {
-                        Folder catalog = new Folder {
-                            FolderID = reader.GetInt32(reader.GetOrdinal("FolderID")),
-                            Name = reader.GetString(reader.GetOrdinal("FolderName")),
-                            ParentID = reader.IsDBNull(reader.GetOrdinal("ParentID")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("ParentID"))
-                        };
-                        folders.Add(catalog);
+                List<Folder> folders = new List<Folder>() {
+                    new Folder {
+                        Name = "Creating Digital Images",
+                        ParentID = null
+                    },
+                    new Folder {
+                        Name = "Resources",
+                        ParentID = 1
+                    },
+                    new Folder {
+                        Name = "Evidence",
+                        ParentID = 1
+                    },
+                    new Folder {
+                        Name = "Graphic Products",
+                        ParentID = 1
+                    },
+                    new Folder {
+                        Name = "Primary Sources",
+                        ParentID = 2
+                    },
+                    new Folder {
+                        Name = "Secondary Sources",
+                        ParentID = 2
+                    },
+                    new Folder {
+                        Name = "Process",
+                        ParentID = 4
+                    },
+                    new Folder {
+                        Name = "Final Product",
+                        ParentID = 4
                     }
-                }
-            }
+                };
 
-            return folders;
+                context.Folders.AddRange(folders);
+                context.SaveChanges();
+            }
         }
     }
 }
