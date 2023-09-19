@@ -1,0 +1,26 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">@Model.Explorer.folderDisplayer.Name</h1>
+</div>
+
+@if (@Model.Explorer.folderDisplayer.parentID != null)
+{
+    <div>
+        <a class="display-10" asp-page="Index" asp-route-folderId="@Model.Explorer.folderDisplayer.parentID">Back</a>
+    </div>
+}
+
+<div>
+    <ul>
+        @foreach (Model.Folder folder in Model.Explorer.folderDisplayer.ChildFolders) {
+            <li>
+                <a asp-page="Index" asp-route-folderId="@folder.FolderID">@folder.Name</a>
+            </li>
+        }
+    </ul>
+</div>
